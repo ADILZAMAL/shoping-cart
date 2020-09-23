@@ -6,13 +6,37 @@ import data from "./data.json";
 import { Col, Container, Row } from "react-bootstrap";
 import Product from "./components/Product";
 import Filter from "./components/Filter";
+import CartItems from "./components/CartItems";
 function App() {
   const [products, setProducts] = useState([]);
   const [size, setSize] = useState("ALL"); //filter
   const [sort, setSort] = useState("Latest"); //sort
+  const [cartItems, setCartItems] = useState([]);
   useEffect(() => {
     setProducts(data.products);
   }, []);
+
+  const removeItemFromCart = (product) => {
+    const oldCartItems = [...cartItems];
+    const index = oldCartItems.findIndex((item) => {
+      return item._id == product._id;
+    });
+    oldCartItems.splice(index, 1);
+    setCartItems(oldCartItems);
+  };
+  const addToCartItem = (product) => {
+    const oldCartItems = [...cartItems];
+    const index = oldCartItems.findIndex((item) => {
+      return item._id == product._id;
+    });
+    console.log(index);
+    if (index > -1) {
+      oldCartItems[index].count++;
+    } else {
+      oldCartItems.push({ ...product, count: 1 });
+    }
+    setCartItems(oldCartItems);
+  };
   const sortProducts = (event) => {
     setSort(event.target.value);
     products.sort((a, b) => {
@@ -46,7 +70,7 @@ function App() {
       <Navbar />
       <Container fluid>
         <Row>
-          <Col className="border product__list" md="8">
+          <Col className="border product__list" md="9">
             <Row>
               <Filter
                 size={size}
@@ -56,12 +80,21 @@ function App() {
                 count={products.length}
               />
               {products.map((product) => {
-                return <Product key={product._id} data={product} />;
+                return (
+                  <Product
+                    addToCartItem={addToCartItem}
+                    key={product._id}
+                    data={product}
+                  />
+                );
               })}
             </Row>
           </Col>
-          <Col className="border" md="4">
-            <h1>Shopping summary</h1>
+          <Col className="border" md="3">
+            <CartItems
+              cartItems={cartItems}
+              removeItemFromCart={removeItemFromCart}
+            />
           </Col>
         </Row>
       </Container>

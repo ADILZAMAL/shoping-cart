@@ -1,6 +1,5 @@
 .product__image img {
-  max-width: 30rem;
-  max-height: 25rem;
+  max-width: 22rem;
   object-fit: contain;
 }
 .product__title {
