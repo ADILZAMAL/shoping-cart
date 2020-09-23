@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Col } from "react-bootstrap";
-import "./style/Product.css";
+import "../style/Product.css";
 export default function Product(props) {
   const { _id, image, title, description, availableSize, price } = props.data;
   return (
