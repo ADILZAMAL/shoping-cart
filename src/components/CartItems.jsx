@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "../style/Cart.css";
+import Fade from "react-reveal";
 export default function CartItems({
   cartItems,
   removeItemFromCart,
@@ -34,95 +35,101 @@ export default function CartItems({
             : `You have ${cartItems.length} items in the cart`}
         </h6>
       </Row>
-      <Row>
-        {cartItems.map((item) => {
-          return (
-            <div key={item._id} className="cart__item p-3 ">
-              <div className="cart__image_title ">
-                <img className="px-3" src={item.image} />
-                <div>
-                  <p>{item.title}</p>
-                  <div className="cart__price_removeBtn">
-                    <p>
-                      ${item.price}*{item.count}
-                    </p>
-                    <Button
-                      onClick={() => {
-                        removeItemFromCart(item);
-                      }}
-                      variant="secondary"
-                    >
-                      Remove
-                    </Button>
+      <Fade left cascade>
+        <Row>
+          {cartItems.map((item) => {
+            return (
+              <div key={item._id} className="cart__item p-3 ">
+                <div className="cart__image_title ">
+                  <img className="px-3" src={item.image} />
+                  <div>
+                    <p>{item.title}</p>
+                    <div className="cart__price_removeBtn">
+                      <p>
+                        ${item.price}*{item.count}
+                      </p>
+                      <Button
+                        onClick={() => {
+                          removeItemFromCart(item);
+                        }}
+                        variant="secondary"
+                      >
+                        Remove
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
+            );
+          })}
+          {cartItems.length !== 0 && (
+            <div className="cart__total p-5">
+              <p className="cart__total__price">
+                Total:$
+                {cartItems
+                  .reduce((a, b) => a + b.price * b.count, 0)
+                  .toFixed(2)}
+              </p>
+              <Button
+                onClick={() => {
+                  setShowCheckoutForm(true);
+                }}
+                size="sm"
+                variant="warning"
+              >
+                Proceed
+              </Button>
             </div>
-          );
-        })}
-        {cartItems.length !== 0 && (
-          <div className="cart__total p-5">
-            <p className="cart__total__price">
-              Total:$
-              {cartItems.reduce((a, b) => a + b.price * b.count, 0).toFixed(2)}
-            </p>
-            <Button
-              onClick={() => {
-                setShowCheckoutForm(true);
-              }}
-              size="sm"
-              variant="warning"
-            >
-              Proceed
-            </Button>
-          </div>
-        )}
-      </Row>
+          )}
+        </Row>
+      </Fade>
       {showCheckoutForm && (
         <Row>
           <Col>
-            <Form onSubmit={createOrder}>
-              <Form.Group>
-                <Form.Label>Email address</Form.Label>
-                <Form.Control
-                  required
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  type="email"
-                  placeholder="Enter email"
-                />
-              </Form.Group>
+            <Fade right cascade>
+              <Form onSubmit={createOrder}>
+                <Form.Group>
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    required
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                    type="email"
+                    placeholder="Enter email"
+                  />
+                </Form.Group>
 
-              <Form.Group>
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  required
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                  type="text"
-                  placeholder="Enter Name"
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Address</Form.Label>
-                <Form.Control
-                  required
-                  value={address}
-                  onChange={(e) => {
-                    setAddress(e.target.value);
-                  }}
-                  type="text"
-                  placeholder="Enter Address"
-                />
-              </Form.Group>
-              <Button variant="warning" type="submit">
-                Checkout
-              </Button>
-            </Form>
+                <Form.Group>
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    required
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                    type="text"
+                    placeholder="Enter Name"
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Address</Form.Label>
+                  <Form.Control
+                    required
+                    value={address}
+                    onChange={(e) => {
+                      setAddress(e.target.value);
+                    }}
+                    type="text"
+                    placeholder="Enter Address"
+                  />
+                </Form.Group>
+                <Button variant="warning" type="submit">
+                  Checkout
+                </Button>
+              </Form>
+            </Fade>
           </Col>
         </Row>
       )}
