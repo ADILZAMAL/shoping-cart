@@ -11,31 +11,37 @@ function App() {
   const [products, setProducts] = useState([]);
   const [size, setSize] = useState("ALL"); //filter
   const [sort, setSort] = useState("Latest"); //sort
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(
+    JSON.parse(localStorage.getItem("cartItems"))
+  );
   useEffect(() => {
     setProducts(data.products);
   }, []);
-
+  const placeOrder = (order) => {
+    alert("save order data for" + order.name);
+  };
   const removeItemFromCart = (product) => {
-    const oldCartItems = [...cartItems];
-    const index = oldCartItems.findIndex((item) => {
+    const newCartItems = [...cartItems];
+    const index = newCartItems.findIndex((item) => {
       return item._id == product._id;
     });
-    oldCartItems.splice(index, 1);
-    setCartItems(oldCartItems);
+    newCartItems.splice(index, 1);
+    setCartItems(newCartItems);
+    localStorage.setItem("cartItems", JSON.stringify(newCartItems));
   };
   const addToCartItem = (product) => {
-    const oldCartItems = [...cartItems];
-    const index = oldCartItems.findIndex((item) => {
+    const newCartItems = [...cartItems];
+    const index = newCartItems.findIndex((item) => {
       return item._id == product._id;
     });
     console.log(index);
     if (index > -1) {
-      oldCartItems[index].count++;
+      newCartItems[index].count++;
     } else {
-      oldCartItems.push({ ...product, count: 1 });
+      newCartItems.push({ ...product, count: 1 });
     }
-    setCartItems(oldCartItems);
+    setCartItems(newCartItems);
+    localStorage.setItem("cartItems", JSON.stringify(newCartItems));
   };
   const sortProducts = (event) => {
     setSort(event.target.value);
@@ -92,6 +98,7 @@ function App() {
           </Col>
           <Col className="border" md="3">
             <CartItems
+              placeOrder={placeOrder}
               cartItems={cartItems}
               removeItemFromCart={removeItemFromCart}
             />

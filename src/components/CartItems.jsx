@@ -1,7 +1,30 @@
-import React from "react";
-import { Button, Container, Row } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "../style/Cart.css";
-export default function CartItems({ cartItems, removeItemFromCart }) {
+export default function CartItems({
+  cartItems,
+  removeItemFromCart,
+  placeOrder,
+}) {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [showCheckoutForm, setShowCheckoutForm] = useState(false);
+  const createOrder = (event) => {
+    event.preventDefault();
+    const order = {
+      name,
+      email,
+      address,
+      cartItems,
+    };
+    placeOrder(order);
+
+    setEmail("");
+    setName("");
+    setAddress("");
+    console.log(order);
+  };
   return (
     <Container fluid className="cart">
       <Row className="cart__header p-3">
@@ -43,12 +66,66 @@ export default function CartItems({ cartItems, removeItemFromCart }) {
               Total:$
               {cartItems.reduce((a, b) => a + b.price * b.count, 0).toFixed(2)}
             </p>
-            <Button size="sm" variant="warning">
+            <Button
+              onClick={() => {
+                setShowCheckoutForm(true);
+              }}
+              size="sm"
+              variant="warning"
+            >
               Proceed
             </Button>
           </div>
         )}
       </Row>
+      {showCheckoutForm && (
+        <Row>
+          <Col>
+            <Form onSubmit={createOrder}>
+              <Form.Group>
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  required
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  type="email"
+                  placeholder="Enter email"
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  required
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                  type="text"
+                  placeholder="Enter Name"
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  required
+                  value={address}
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                  }}
+                  type="text"
+                  placeholder="Enter Address"
+                />
+              </Form.Group>
+              <Button variant="warning" type="submit">
+                Checkout
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 }
