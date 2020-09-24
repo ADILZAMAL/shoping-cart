@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Col } from "react-bootstrap";
+import Zoom from "react-reveal/Zoom";
 import "../style/Product.css";
+import Modal from "react-modal";
 export default function Product(props) {
-  const { _id, image, title, description, availableSize, price } = props.data;
+  const { _id, image, title, description, availableSizes, price } = props.data;
+  const [product, setProduct] = useState(null);
+  const openModal = (product) => {
+    setProduct(product);
+  };
+  const closeModal = () => {
+    setProduct(null);
+  };
   return (
     <Col className="product p-5 border" sm="6" md="4">
-      <div className="product__image ">
+      <div
+        className="product__image"
+        onClick={() => {
+          setProduct({
+            _id,
+            image,
+            title,
+            description,
+            availableSizes,
+            price,
+          });
+        }}
+      >
         <img src={image} alt={title} />
       </div>
       <h2 className="product__title">{title}</h2>
@@ -18,7 +39,7 @@ export default function Product(props) {
               image,
               title,
               description,
-              availableSize,
+              availableSizes,
               price,
             });
           }}
@@ -28,6 +49,47 @@ export default function Product(props) {
           Add to cart
         </Button>
       </div>
+      {product && (
+        <Modal isOpen={product} onRequestClose={closeModal}>
+          <Zoom>
+            <div className="product-details d-flex  align-items-center">
+              <img src={product.image} className="d-block" />
+              <div className="m-3 product-details__description ">
+                <h3>{product.title}</h3>
+                <p>{product.description}</p>
+                <h5>
+                  Available Sizes:
+                  {product.availableSizes.map((x) => {
+                    return (
+                      <Button size="sm" className="m-1" variant="info">
+                        {x}
+                      </Button>
+                    );
+                  })}
+                </h5>
+              </div>
+            </div>
+            <div className="d-flex  justify-content-center align-items-center">
+              <h3>${product.price}</h3>
+              <Button
+                onClick={() => {
+                  props.addToCartItem(product);
+                  closeModal();
+                }}
+                className="m-3"
+                variant="warning"
+              >
+                Add to Cart
+              </Button>
+            </div>
+          </Zoom>
+          <div className=" d-flex justify-content-center">
+            <Button onClick={closeModal} variant="secondary">
+              close
+            </Button>
+          </div>
+        </Modal>
+      )}
     </Col>
   );
 }

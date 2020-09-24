@@ -7,6 +7,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import Product from "./components/Product";
 import Filter from "./components/Filter";
 import CartItems from "./components/CartItems";
+import Fade from "react-reveal";
 function App() {
   const [products, setProducts] = useState([]);
   const [size, setSize] = useState("ALL"); //filter
@@ -73,7 +74,10 @@ function App() {
 
   return (
     <div className="app">
-      <Navbar />
+      <Fade>
+        <Navbar />
+      </Fade>
+
       <Container fluid>
         <Row>
           <Col className="border product__list" md="9">
@@ -85,15 +89,19 @@ function App() {
                 sortProducts={sortProducts}
                 count={products.length}
               />
-              {products.map((product) => {
-                return (
-                  <Product
-                    addToCartItem={addToCartItem}
-                    key={product._id}
-                    data={product}
-                  />
-                );
-              })}
+              <Fade bottom cascade>
+                <Row>
+                  {products.map((product) => {
+                    return (
+                      <Product
+                        addToCartItem={addToCartItem}
+                        key={product._id}
+                        data={product}
+                      />
+                    );
+                  })}
+                </Row>
+              </Fade>
             </Row>
           </Col>
           <Col className="border" md="3">
