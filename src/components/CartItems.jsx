@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "../style/Cart.css";
 import Fade from "react-reveal";
-export default function CartItems({
-  cartItems,
-  removeItemFromCart,
-  placeOrder,
-}) {
+import { cartItemSelector, removeFromCart } from "../store/product";
+import { useSelector, useDispatch } from "react-redux";
+export default function CartItems({ placeOrder }) {
+  const cartItems = useSelector(cartItemSelector);
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -50,7 +50,7 @@ export default function CartItems({
                       </p>
                       <Button
                         onClick={() => {
-                          removeItemFromCart(item);
+                          dispatch(removeFromCart(item));
                         }}
                         variant="secondary"
                       >
