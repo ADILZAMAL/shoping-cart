@@ -3,7 +3,10 @@ import { Button, Col } from "react-bootstrap";
 import Zoom from "react-reveal/Zoom";
 import "../style/Product.css";
 import Modal from "react-modal";
+import { addToCart } from "../store/product";
+import { useDispatch } from "react-redux";
 export default function Product(props) {
+  const dispatch = useDispatch();
   const { _id, image, title, description, availableSizes, price } = props.data;
   const [product, setProduct] = useState(null);
   const openModal = (product) => {
@@ -13,7 +16,7 @@ export default function Product(props) {
     setProduct(null);
   };
   return (
-    <Col className="product p-5 border" sm="6" md="4">
+    <Col className="product p-5 " sm="6" md="4">
       <div
         className="product__image"
         onClick={() => {
@@ -34,14 +37,16 @@ export default function Product(props) {
         <h1 className="product__price">${price}</h1>
         <Button
           onClick={() => {
-            props.addToCartItem({
-              _id,
-              image,
-              title,
-              description,
-              availableSizes,
-              price,
-            });
+            dispatch(
+              addToCart({
+                _id,
+                image,
+                title,
+                description,
+                availableSizes,
+                price,
+              })
+            );
           }}
           size="sm"
           className="product__btn"
@@ -73,7 +78,7 @@ export default function Product(props) {
               <h3>${product.price}</h3>
               <Button
                 onClick={() => {
-                  props.addToCartItem(product);
+                  dispatch(addToCart(product));
                   closeModal();
                 }}
                 className="m-3"

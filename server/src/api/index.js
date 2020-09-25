@@ -17,7 +17,7 @@ const Schema = joi.object({
 //Read all products
 router.get("/product", async (req, res) => {
   const products = await product.find({});
-  res.send(products);
+  res.json(products);
 });
 
 //Insert a data
